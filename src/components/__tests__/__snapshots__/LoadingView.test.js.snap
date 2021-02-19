@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot renders correctly with no data 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "justifyContent": "center",
+        "padding": 32,
+      },
+      Object {
+        "flex": 0,
+      },
+    ]
+  }
+>
+  <ActivityIndicator
+    animating={true}
+    color="black"
+    hidesWhenStopped={true}
+    size="large"
+  />
+</View>
+`;

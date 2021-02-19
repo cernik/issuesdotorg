@@ -1,0 +1,36 @@
+// @flow
+import React from 'react';
+import renderer from 'react-test-renderer';
+import Card from '../Card';
+
+describe('snapshot', () => {
+  const item = {
+    id: 808245666,
+    state: 'closed',
+    title: 'title goes here',
+    body: 'default body',
+    number: 704,
+    comments: 12,
+    user: {
+      login: 'johndoe110',
+      avatar_url: 'path_to_avatar.png',
+    },
+    created_at: '2021-02-15T07:02:04Z',
+    updated_at: '2021-02-15T07:12:37Z',
+  };
+
+  it('renders correctly with no data', () => {
+    const tree = renderer.create(<Card />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('render correctly with given data', () => {
+    const tree = renderer.create(<Card item={item} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('render accepts descendant prop', () => {
+    const tree = renderer.create(<Card item={item} descendant />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});

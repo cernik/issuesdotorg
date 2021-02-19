@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot render correctly with given data 1`] = `
+Array [
+  <Text
+    style={
+      Object {
+        "fontSize": 22,
+        "fontWeight": "700",
+      }
+    }
+  >
+    title goes here
+    <Text
+      style={
+        Object {
+          "color": "grey",
+          "fontWeight": "500",
+        }
+      }
+    >
+       #704
+    </Text>
+  </Text>,
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "borderBottomWidth": 1,
+        "borderColor": "gainsboro",
+        "flexDirection": "row",
+        "marginBottom": 16,
+        "paddingVertical": 16,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "flexDirection": "row",
+          },
+          Object {
+            "alignItems": "center",
+            "borderRadius": 16,
+            "height": 32,
+            "justifyContent": "center",
+            "paddingHorizontal": 12,
+          },
+          Object {
+            "backgroundColor": "red",
+          },
+        ]
+      }
+    >
+      <SvgMock
+        style={
+          Object {
+            "margin": 2,
+          }
+        }
+      />
+      <Text
+        style={
+          Object {
+            "color": "white",
+            "fontSize": 18,
+            "fontWeight": "600",
+            "marginHorizontal": 8,
+          }
+        }
+      >
+        Closed
+      </Text>
+    </View>
+    <Text
+      style={
+        Object {
+          "fontSize": 16,
+          "marginStart": 8,
+        }
+      }
+    >
+      12 comments
+    </Text>
+  </View>,
+]
+`;

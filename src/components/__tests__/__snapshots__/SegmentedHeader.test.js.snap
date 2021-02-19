@@ -1,0 +1,171 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "borderBottomWidth": 1,
+          "borderTopWidth": 1,
+          "minWidth": 90,
+          "padding": 4,
+          "paddingHorizontal": 16,
+        },
+        Object {
+          "backgroundColor": "white",
+        },
+        Object {
+          "borderBottomLeftRadius": 8,
+          "borderLeftWidth": 1,
+          "borderRightWidth": 0.5,
+          "borderTopLeftRadius": 8,
+        },
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "fontSize": 17,
+              "fontWeight": "500",
+            },
+            Object {},
+          ]
+        }
+      >
+        open
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "borderBottomWidth": 1,
+          "borderTopWidth": 1,
+          "minWidth": 90,
+          "padding": 4,
+          "paddingHorizontal": 16,
+        },
+        Object {
+          "backgroundColor": "gainsboro",
+        },
+        null,
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "fontSize": 17,
+              "fontWeight": "500",
+            },
+            Object {
+              "fontWeight": "bold",
+            },
+          ]
+        }
+      >
+        closed
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Array [
+        Object {
+          "alignItems": "center",
+          "borderBottomWidth": 1,
+          "borderTopWidth": 1,
+          "minWidth": 90,
+          "padding": 4,
+          "paddingHorizontal": 16,
+        },
+        Object {
+          "backgroundColor": "white",
+        },
+        Object {
+          "borderBottomRightRadius": 8,
+          "borderLeftWidth": 0.5,
+          "borderRightWidth": 1,
+          "borderTopRightRadius": 8,
+        },
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "fontSize": 17,
+              "fontWeight": "500",
+            },
+            Object {},
+          ]
+        }
+      >
+        all
+      </Text>
+    </View>
+  </View>
+</View>
+`;

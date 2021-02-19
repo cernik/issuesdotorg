@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot render correctly with given data 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        Object {
+          "flexDirection": "row",
+        },
+        Object {
+          "borderBottomWidth": 1,
+          "height": 100,
+          "marginHorizontal": 16,
+          "paddingBottom": 4,
+          "paddingTop": 8,
+        },
+      ]
+    }
+  >
+    <SvgMock
+      style={
+        Object {
+          "margin": 2,
+        }
+      }
+    />
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "justifyContent": "space-between",
+          "marginStart": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "fontSize": 17,
+            "fontWeight": "500",
+          }
+        }
+      >
+        title goes here
+      </Text>
+      <Text
+        style={
+          Object {
+            "fontSize": 13,
+            "fontWeight": "400",
+          }
+        }
+      >
+        #704 by johndoe110 was closed - updated 4 days
+      </Text>
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <SvgMock
+        style={
+          Object {
+            "margin": 2,
+          }
+        }
+      />
+      <Text
+        style={
+          Object {
+            "fontSize": 13,
+            "fontWeight": "400",
+          }
+        }
+      >
+        12
+      </Text>
+    </View>
+  </View>
+</View>
+`;
