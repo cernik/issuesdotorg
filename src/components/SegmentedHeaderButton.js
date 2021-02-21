@@ -9,7 +9,7 @@ type SegmentedHeaderButtonProps = {
   value: ItemStateType,
   selected: boolean,
   onPress: () => void,
-  style: Object,
+  style?: Object,
 };
 
 const SegmentedHeaderButton = ({

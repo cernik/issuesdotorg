@@ -19,11 +19,6 @@ describe('snapshot', () => {
     updated_at: '2021-02-15T07:12:37Z',
   };
 
-  it('renders correctly with no data', () => {
-    const tree = renderer.create(<Card />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
   it('render correctly with given data', () => {
     const tree = renderer.create(<Card item={item} />).toJSON();
     expect(tree).toMatchSnapshot();

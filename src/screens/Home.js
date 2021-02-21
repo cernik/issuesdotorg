@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  FlatList,
   SafeAreaView,
   ActionSheetIOS,
   StyleSheet,
@@ -12,47 +11,10 @@ import {
 
 import {noop, ROUTES, SORT_TYPE} from '../utils/constants';
 import {Styles} from '../utils/styles';
-import Row from '../components/Row';
 import SegmentedHeader from '../components/SegmentedHeader';
+import IssuesList from '../components/IssuesList';
 import type {ItemType, ItemStateType} from '../types';
-import {getSortedData} from '../utils/format';
-import {fetchList} from '../utils/api';
 import BookmarkAddIcon from '../assets/svg/bookmark-add.svg';
-
-function useFetchMore(state = 'closed', sortType): [Array<ItemType>, Function] {
-  const [page, setPage] = React.useState(1);
-  const [shouldFetch, setShouldFetch] = React.useState(true);
-  const [shouldRefresh, setShouldRefresh] = React.useState(true);
-  const [data, setData] = React.useState([]);
-
-  const fetchMore = React.useCallback(() => setShouldFetch(true), []);
-
-  React.useEffect(() => {
-    setShouldRefresh(true);
-    setShouldFetch(true);
-    setPage(1);
-  }, [state]);
-
-  React.useEffect(() => {
-    if (!shouldFetch) {
-      return;
-    }
-
-    const fetch = async () => {
-      const newData = await fetchList({state, page, limit: 20});
-      setShouldFetch(false);
-      setData((oldData) => {
-        return shouldRefresh ? newData : [...oldData, ...newData];
-      });
-      setShouldRefresh(false);
-      setPage(page + 1);
-    };
-
-    fetch();
-  }, [state, page, shouldFetch, shouldRefresh]);
-
-  return [data, fetchMore];
-}
 
 const HeaderLeft = ({onPress = noop}) => (
   <TouchableOpacity onPress={onPress} style={Styles.headerLeft}>
@@ -93,7 +55,6 @@ function getOptions(selectedSortType: string): Array<string> {
 const Home = ({navigation}: HomeProps) => {
   const [sortType, setSortType] = React.useState(SORT_TYPE.UPDATED_AT);
   const [status, setStatus] = React.useState('all');
-  const [data, fetchMore] = useFetchMore(status);
 
   React.useLayoutEffect(() => {
     const handleHeaderLeftPress = () => {
@@ -137,22 +98,12 @@ const Home = ({navigation}: HomeProps) => {
     }
   };
 
-  const renderItem = ({item}: {item: ItemType}) => {
-    return <Row item={item} onPress={handlePress} />;
-  };
-
-  const keyExtractor = (item: ItemType, key: number): string => {
-    return String(item.id || key);
-  };
-
   return (
     <SafeAreaView style={Styles.flex1}>
-      <FlatList
-        data={getSortedData(data, sortType)}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReachedThreshold={1}
-        onEndReached={fetchMore}
+      <IssuesList
+        status={status}
+        sortType={sortType}
+        onItemPress={handlePress}
       />
     </SafeAreaView>
   );

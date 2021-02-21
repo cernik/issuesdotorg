@@ -20,9 +20,4 @@ describe('snapshot', () => {
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
-
-  it('accepts style prop', () => {
-    const tree = renderer.create(<BookmarkButton style={{}} />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
 });

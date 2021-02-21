@@ -1,13 +1,12 @@
 // @flow
-
 export type ItemStateType = 'closed' | 'open' | 'all';
 
 export type ItemType = {
-  id: number | string,
+  id: number,
   state: ItemStateType,
   title: string,
   body: string,
-  number: string,
+  number: number,
   comments: number,
   user: {
     login: string,

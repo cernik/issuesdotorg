@@ -7,7 +7,14 @@ jest.mock('@react-navigation/native');
 
 describe('snapshot', () => {
   it('renders correctly', () => {
-    const tree = renderer.create(<Details />).toJSON();
+    const tree = renderer
+      .create(
+        <Details
+          route={{params: {id: 123}}}
+          navigation={{setOptions: () => {}}}
+        />,
+      )
+      .toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

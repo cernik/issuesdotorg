@@ -7,16 +7,16 @@ import {noop} from '../utils/constants';
 
 import CardHeader from '../components/CardHeader';
 import Card from '../components/Card';
+import CommentsList from '../components/CommentsList';
 import LoadingView from '../components/LoadingView';
 import BookmarkButton from '../components/BookmarkButton';
 import type {ItemType} from '../types';
 import {Styles} from '../utils/styles';
+import {fetchOne} from '../utils/api';
 
-import {fetchOne, fetchComments} from '../utils/api';
-
-function useFetch(id = '', defaultData = {}): [ItemType, boolean] {
+function useFetch(id: number): [ItemType, boolean] {
   const [isFetching, setIsFetching] = React.useState(false);
-  const [data, setData] = React.useState(defaultData);
+  const [data, setData] = React.useState({});
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -36,39 +36,13 @@ function useFetch(id = '', defaultData = {}): [ItemType, boolean] {
   return [data, isFetching];
 }
 
-function useFetchComments(
-  id = '',
-  defaultData = [],
-): [Array<ItemType>, boolean] {
-  const [isFetching, setIsFetching] = React.useState(false);
-  const [data, setData] = React.useState(defaultData);
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        setIsFetching(true);
-
-        const responseData = await fetchComments(id);
-
-        setData(responseData);
-
-        setIsFetching(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  return [data, isFetching];
-}
-
 type DetailsProps = {
   navigation: {
     setOptions: (params: Object) => void,
   },
   route: {
     params: {
-      id: string,
+      id: number,
     },
   },
 };
@@ -76,11 +50,10 @@ type DetailsProps = {
 const Details = ({navigation, route}: DetailsProps) => {
   const {id} = route.params;
   const [item, isFetching] = useFetch(id);
-  const [comments, isFetchingComments] = useFetchComments(id);
 
   const [selected, setSelected] = React.useState(false);
 
-  const handlePress = React.useCallback(() => {
+  const handleHeaderRightPress = React.useCallback(() => {
     storageUtility.getData('selected').then((ret) => {
       let nextData = (ret || []).filter((s) => s.number !== item?.number);
       if (!selected) {
@@ -106,12 +79,12 @@ const Details = ({navigation, route}: DetailsProps) => {
       headerRight: () => (
         <BookmarkButton
           selected={selected}
-          onPress={handlePress}
+          onPress={handleHeaderRightPress}
           style={Styles.headerRight}
         />
       ),
     });
-  }, [navigation, handlePress, selected]);
+  }, [navigation, handleHeaderRightPress, selected]);
 
   if (isFetching) {
     return <LoadingView />;
@@ -122,13 +95,7 @@ const Details = ({navigation, route}: DetailsProps) => {
       <ScrollView contentContainerStyle={styles.contentContainerStyle}>
         <CardHeader item={item} />
         <Card item={item} />
-        {isFetchingComments ? (
-          <LoadingView />
-        ) : (
-          comments.map((comment) => (
-            <Card key={comment.id} item={comment} descendant />
-          ))
-        )}
+        <CommentsList id={item?.number} />
       </ScrollView>
     </SafeAreaView>
   );

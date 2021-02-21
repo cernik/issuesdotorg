@@ -13,7 +13,7 @@ import type {ItemType} from '../types';
 
 type RowProps = {
   item: ItemType,
-  onPress: (item: ItemType) => void,
+  onPress?: (item: ItemType) => void,
 };
 
 const Row = ({item = {}, onPress = noop}: RowProps) => {

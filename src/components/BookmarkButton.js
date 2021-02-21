@@ -8,7 +8,7 @@ import BookmarkIcon from '../assets/svg/bookmark.svg';
 import BookmarkAddIcon from '../assets/svg/bookmark-add.svg';
 
 type BookmarkButtonProps = {
-  selected: boolean,
+  selected?: boolean,
   onPress?: () => void,
   style?: Object,
 };

@@ -26,7 +26,7 @@ export async function fetchList({
   return dataResult;
 }
 
-export async function fetchOne(id: string): Promise<ItemType> {
+export async function fetchOne(id: number): Promise<ItemType> {
   const dataResult = await fetch(`${URL}/issues/${id}`).then((response) =>
     response.json(),
   );
@@ -38,7 +38,7 @@ export async function fetchOne(id: string): Promise<ItemType> {
   return dataResult;
 }
 
-export async function fetchComments(id: string): Promise<Array<ItemType>> {
+export async function fetchComments(id: number): Promise<Array<ItemType>> {
   const dataResult = await fetch(
     `${URL}/issues/${id}/comments`,
   ).then((response) => response.json());
