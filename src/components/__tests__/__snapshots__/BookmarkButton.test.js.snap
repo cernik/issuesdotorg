@@ -21,27 +21,6 @@ exports[`snapshot accepts onPress function 1`] = `
 </View>
 `;
 
-exports[`snapshot accepts style prop 1`] = `
-<View
-  accessible={true}
-  focusable={true}
-  onClick={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
-  style={
-    Object {
-      "opacity": 1,
-    }
-  }
->
-  <SvgMock />
-</View>
-`;
-
 exports[`snapshot non-selected version renders correctly 1`] = `
 <View
   accessible={true}

@@ -1,4 +1,5 @@
 // @flow
+import {connect} from 'react-redux';
 import React from 'react';
 import {ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 
@@ -12,28 +13,28 @@ import LoadingView from '../components/LoadingView';
 import BookmarkButton from '../components/BookmarkButton';
 import type {ItemType} from '../types';
 import {Styles} from '../utils/styles';
-import {fetchOne} from '../utils/api';
+import {
+  fetchOneAction,
+  addBookmarkAction,
+  removeBookmarkAction,
+} from '../redux/actions';
 
-function useFetch(id: number): [ItemType, boolean] {
+function useFetch(id: number, fetchFn: Function): [boolean] {
   const [isFetching, setIsFetching] = React.useState(false);
-  const [data, setData] = React.useState({});
 
   React.useEffect(() => {
     const fetchData = async () => {
       if (id) {
         setIsFetching(true);
-
-        const responseData = await fetchOne(id);
-        setData(responseData);
-
+        await fetchFn(id);
         setIsFetching(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, fetchFn]);
 
-  return [data, isFetching];
+  return [isFetching];
 }
 
 type DetailsProps = {
@@ -45,46 +46,44 @@ type DetailsProps = {
       id: number,
     },
   },
+  item: ItemType,
+  fetchOne: Promise<any>,
+  isBookmark: boolean,
+  addBookmark: Function,
+  removeBookmark: Function,
 };
 
-const Details = ({navigation, route}: DetailsProps) => {
+const Details = ({
+  navigation,
+  route,
+  item,
+  fetchOne,
+  isBookmark,
+  addBookmark,
+  removeBookmark,
+}: DetailsProps) => {
   const {id} = route.params;
-  const [item, isFetching] = useFetch(id);
-
-  const [selected, setSelected] = React.useState(false);
+  const [isFetching] = useFetch(id, fetchOne);
 
   const handleHeaderRightPress = React.useCallback(() => {
-    storageUtility.getData('selected').then((ret) => {
-      let nextData = (ret || []).filter((s) => s.number !== item?.number);
-      if (!selected) {
-        nextData = nextData.concat([item]);
-      }
-      storageUtility.storeData('selected', nextData);
-    });
-
-    setSelected(!selected);
-  }, [selected, setSelected, item]);
-
-  React.useEffect(() => {
-    storageUtility.getData('selected').then((ret) => {
-      const index = (ret || []).findIndex((s) => s.number === item?.number);
-      if (index !== -1) {
-        setSelected(true);
-      }
-    });
-  }, [item?.number]);
+    if (isBookmark) {
+      removeBookmark(item);
+    } else {
+      addBookmark(item);
+    }
+  }, [isBookmark, item, addBookmark, removeBookmark]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <BookmarkButton
-          selected={selected}
+          selected={isBookmark}
           onPress={handleHeaderRightPress}
           style={Styles.headerRight}
         />
       ),
     });
-  }, [navigation, handleHeaderRightPress, selected]);
+  }, [navigation, handleHeaderRightPress, isBookmark]);
 
   if (isFetching) {
     return <LoadingView />;
@@ -110,6 +109,7 @@ Details.defaultProps = {
       item: {},
     },
   },
+  item: {},
 };
 
 const styles = StyleSheet.create({
@@ -119,4 +119,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Details;
+// export default Details;
+
+const DetailsContainer = connect(
+  (state) => ({
+    item: state.currentIssue,
+    isBookmark:
+      state.bookmarks.findIndex((x) => x.id === state.currentIssue.id) !== -1,
+  }),
+  (dispatch) => ({
+    fetchOne: (payload) => dispatch(fetchOneAction(payload)),
+    addBookmark: (payload) => dispatch(addBookmarkAction(payload)),
+    removeBookmark: (payload) => dispatch(removeBookmarkAction(payload)),
+  }),
+)(Details);
+
+export default DetailsContainer;

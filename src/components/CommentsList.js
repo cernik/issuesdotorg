@@ -1,42 +1,39 @@
 // @flow
+import {connect} from 'react-redux';
 import React from 'react';
 import Card from '../components/Card';
 import LoadingView from '../components/LoadingView';
 import type {ItemType} from '../types';
+import {fetchCommentsAction} from '../redux/actions';
 
-import {fetchComments} from '../utils/api';
-
-function useFetchComments(id: number): [Array<ItemType>, boolean] {
+function useFetchComments(id: number, fetchFn: Function): [boolean] {
   const [isFetching, setIsFetching] = React.useState(false);
-  const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
       if (id) {
         setIsFetching(true);
-
-        const responseData = await fetchComments(id);
-
-        setData(responseData);
-
+        await fetchFn(id);
         setIsFetching(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [id, fetchFn]);
 
-  return [data, isFetching];
+  return [isFetching];
 }
 
 type CommentsListProps = {
   id: number,
+  comments: Array<ItemType>,
+  fetchComments: Function,
 };
 
-const CommentsList = ({id}: CommentsListProps) => {
-  const [comments, isFetchingComments] = useFetchComments(id);
+const CommentsList = ({id, comments, fetchComments}: CommentsListProps) => {
+  const [isFetching] = useFetchComments(id, fetchComments);
 
-  if (!isFetchingComments || !id) {
+  if (isFetching || !id) {
     return <LoadingView />;
   }
 
@@ -49,4 +46,13 @@ const CommentsList = ({id}: CommentsListProps) => {
   );
 };
 
-export default CommentsList;
+// export default CommentsList;
+
+const CommentsListContainer = connect(
+  (state) => ({comments: state.comments}),
+  (dispatch) => ({
+    fetchComments: (payload) => dispatch(fetchCommentsAction(payload)),
+  }),
+)(CommentsList);
+
+export default CommentsListContainer;

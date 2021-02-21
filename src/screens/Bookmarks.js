@@ -1,4 +1,5 @@
 // @flow
+import {connect} from 'react-redux';
 import React from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
@@ -7,32 +8,37 @@ import {noop, ROUTES} from '../utils/constants';
 import {Styles} from '../utils/styles';
 import Row from '../components/Row';
 import type {ItemType} from '../types';
-import {fetchBookmarks} from '../utils/api';
+import {fetchBookmarksAction} from '../redux/actions';
+
+function useFetch(fetchFn) {
+  const [isFetching, setIsFetching] = React.useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        setIsFetching(true);
+        await fetchFn();
+        setIsFetching(false);
+      };
+
+      fetchData();
+    }, [fetchFn]),
+  );
+
+  return [isFetching];
+}
 
 type BookmarksProps = {
   navigation: {
     navigate: (name: string, params: Object) => void,
     setOptions: (params: Object) => void,
   },
+  bookmarks: Array<ItemType>,
+  fetchBookmarks: Function,
 };
 
-function useBookmarksStorageWithFocusEffect() {
-  const [data, setData] = React.useState([]);
-
-  useFocusEffect(() => {
-    const fetch = async () => {
-      const nextData = await fetchBookmarks();
-      setData(nextData);
-    };
-
-    fetch();
-  });
-
-  return [data];
-}
-
-const Bookmarks = ({navigation}: BookmarksProps) => {
-  const [data] = useBookmarksStorageWithFocusEffect();
+const Bookmarks = ({navigation, bookmarks, fetchBookmarks}: BookmarksProps) => {
+  useFetch(fetchBookmarks);
 
   const handlePress = (item: ItemType): void => {
     if (item.number) {
@@ -51,7 +57,7 @@ const Bookmarks = ({navigation}: BookmarksProps) => {
   return (
     <SafeAreaView style={Styles.flex1}>
       <FlatList
-        data={data}
+        data={bookmarks}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReachedThreshold={1}
@@ -67,4 +73,13 @@ Bookmarks.defaultProps = {
   },
 };
 
-export default Bookmarks;
+// export default Bookmarks;
+
+const BookmarksContainer = connect(
+  (state) => ({bookmarks: state.bookmarks}),
+  (dispatch) => ({
+    fetchBookmarks: () => dispatch(fetchBookmarksAction()),
+  }),
+)(Bookmarks);
+
+export default BookmarksContainer;

@@ -1,23 +1,23 @@
 // @flow
 import * as storageUtility from '../utils/storage';
-import type {ItemType} from '../types';
-
+import type {ItemType, FetchListParams} from '../types';
 import {URL} from './constants';
 
-type fetchListParams = {
-  state: 'closed' | 'open' | 'all',
-  page: number,
-  limit: number,
+type RequestResponse = Array<ItemType> | ItemType;
+
+const requestApi = async (url: string): Promise<RequestResponse> => {
+  const response: Promise<any> = await fetch(url);
+  const responseJson: Promise<any> = await response.json();
+  return responseJson;
 };
 
 export async function fetchList({
   state = 'closed',
   page = 1,
   limit = 10,
-}: fetchListParams): Promise<Array<ItemType | any>> {
-  const dataResult = await fetch(
-    `${URL}/issues?state=${state}&page=${page}&per_page=${limit}`,
-  ).then((response) => response.json());
+}: FetchListParams): Promise<Array<ItemType>> {
+  const url = `${URL}/issues?state=${state}&page=${page}&per_page=${limit}`;
+  const dataResult: Array<ItemType> = await requestApi(url);
 
   if (!Array.isArray(dataResult)) {
     return [];
@@ -27,9 +27,8 @@ export async function fetchList({
 }
 
 export async function fetchOne(id: number): Promise<ItemType> {
-  const dataResult = await fetch(`${URL}/issues/${id}`).then((response) =>
-    response.json(),
-  );
+  const url = `${URL}/issues/${id}`;
+  const dataResult: ItemType = await requestApi(url);
 
   if (typeof dataResult !== 'object') {
     return {};
@@ -39,9 +38,8 @@ export async function fetchOne(id: number): Promise<ItemType> {
 }
 
 export async function fetchComments(id: number): Promise<Array<ItemType>> {
-  const dataResult = await fetch(
-    `${URL}/issues/${id}/comments`,
-  ).then((response) => response.json());
+  const url = `${URL}/issues/${id}/comments`;
+  const dataResult: Array<ItemType> = await requestApi(url);
 
   if (!Array.isArray(dataResult)) {
     return [];
@@ -51,7 +49,7 @@ export async function fetchComments(id: number): Promise<Array<ItemType>> {
 }
 
 export async function fetchBookmarks(): Promise<Array<ItemType>> {
-  const dataResult = await storageUtility.getData('selected');
+  const dataResult: Array<ItemType> = await storageUtility.getData('selected');
   if (!Array.isArray(dataResult)) {
     return [];
   }

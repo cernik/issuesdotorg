@@ -1,4 +1,5 @@
 // @flow
+import {connect} from 'react-redux';
 import React from 'react';
 import {FlatList} from 'react-native';
 
@@ -6,23 +7,22 @@ import Row from './Row';
 import type {ItemType, ItemStateType} from '../types';
 import {noop} from '../utils/constants';
 import {getSortedData} from '../utils/format';
-import {fetchList} from '../utils/api';
+import {fetchListAction} from '../redux/actions';
 
 function useFetchMore(
+  fetchFn: Function,
   state: ItemStateType = 'closed',
-  sortType?: string,
-): [Array<ItemType>, boolean, Function, Function] {
+): [boolean, Function, Function] {
   const [page, setPage] = React.useState(1);
   const [isFetching, setIsFetching] = React.useState(false);
   const [shouldFetch, setShouldFetch] = React.useState(true);
   const [shouldRefresh, setShouldRefresh] = React.useState(true);
-  const [data, setData] = React.useState([]);
 
   const fetchMore = React.useCallback(() => setShouldFetch(true), []);
 
   React.useEffect(() => {
-    setShouldRefresh(true);
     setShouldFetch(true);
+    setShouldRefresh(true);
     setPage(1);
   }, [state]);
 
@@ -37,37 +37,40 @@ function useFetchMore(
       return;
     }
     const fetch = async () => {
-      const newData = await fetchList({state, page, limit: 20});
-      setShouldFetch(false);
       setIsFetching(true);
-      setTimeout(() => {
-        setData((oldData) => {
-          return shouldRefresh ? newData : [...oldData, ...newData];
-        });
-        setShouldRefresh(false);
-        setIsFetching(false);
-        setPage(page + 1);
-      }, 1000);
+      await fetchFn({state, page, limit: 20, shouldRefresh});
+      setShouldFetch(false);
+      setShouldRefresh(false);
+      setIsFetching(false);
+      setPage(page + 1);
     };
 
     fetch();
-  }, [state, page, isFetching, shouldFetch, shouldRefresh]);
+  }, [fetchFn, state, page, shouldFetch, shouldRefresh]);
 
-  return [data, isFetching, fetchMore, handleRefresh];
+  return [isFetching, fetchMore, handleRefresh];
 }
 
 type IssuesListProps = {
   status: ItemStateType,
   sortType: string,
   onItemPress: Function,
+  issues: Array<ItemType>,
+  onItemPress: Function,
+  fetchList: Function,
 };
 
 const IssuesList = ({
   status = 'closed',
   sortType = '',
+  issues,
   onItemPress = noop,
+  fetchList = noop,
 }: IssuesListProps) => {
-  const [data, isFetching, fetchMore, handleRefresh] = useFetchMore(status);
+  const [isFetching, fetchMore, handleRefresh] = useFetchMore(
+    fetchList,
+    status,
+  );
 
   const renderItem = ({item}: {item: ItemType}) => {
     return <Row item={item} onPress={onItemPress} />;
@@ -79,7 +82,7 @@ const IssuesList = ({
 
   return (
     <FlatList
-      data={getSortedData(data, sortType)}
+      data={getSortedData(issues, sortType)}
       renderItem={renderItem}
       refreshing={isFetching}
       onRefresh={handleRefresh}
@@ -90,4 +93,15 @@ const IssuesList = ({
   );
 };
 
-export default IssuesList;
+// export default IssuesList;
+
+const IssuesListContainer = connect(
+  (state) => ({
+    issues: state.issues,
+  }),
+  (dispatch) => ({
+    fetchList: (payload) => dispatch(fetchListAction(payload)),
+  }),
+)(IssuesList);
+
+export default IssuesListContainer;
