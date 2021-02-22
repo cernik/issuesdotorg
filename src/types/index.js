@@ -3,6 +3,8 @@ export type ItemStateType = 'closed' | 'open' | 'all';
 
 export type ItemType = {
   id: number,
+  url: string,
+  comments_url: string,
   state: ItemStateType,
   title: string,
   body: string,

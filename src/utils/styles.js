@@ -54,4 +54,12 @@ export const Styles = StyleSheet.create({
     backgroundColor: 'black',
     marginBottom: 2,
   },
+  button: {
+    minWidth: 240,
+    alignItems: 'center',
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: 8,
+    paddingHorizontal: 32,
+    borderRadius: 2,
+  },
 });

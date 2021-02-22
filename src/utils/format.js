@@ -3,6 +3,17 @@ import moment from 'moment';
 import type {ItemType} from '../types';
 import {SORT_TYPE} from './constants';
 
+export function parseRepoFromUrl(pastedUrl: string): string {
+  if (
+    typeof pastedUrl !== 'string' ||
+    !/^https:\/\/github.com/.test(pastedUrl)
+  ) {
+    return '';
+  }
+  let str = pastedUrl.replace(/^https:\/\/github.com\/|.git$/g, '');
+  return str;
+}
+
 export function parseCreatedAtText(item: ItemType): string {
   return ` on ${moment(item?.created_at).format('MMM DD, YYYY')}`;
 }

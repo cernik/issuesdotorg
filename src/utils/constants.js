@@ -2,9 +2,12 @@
 export const noop: () => void = () => {};
 
 export const HOST: string = 'https://api.github.com';
-export const URL: string = `${HOST}/repos/vmg/redcarpet`;
+export const REPO: string = 'gitpoint/git-point';
+export const DEFAULT_REPO: string = 'vmg/redcarpet';
+export const URL: string = `${HOST}/repos/${REPO}`;
 
 export const ROUTES = {
+  ENTANCE: 'Entance',
   HOME: 'Home',
   DETAILS: 'Details',
   BOOKMARKS: 'Bookmarks',
