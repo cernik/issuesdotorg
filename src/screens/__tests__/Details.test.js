@@ -10,7 +10,7 @@ describe('snapshot', () => {
     const tree = renderer
       .create(
         <Details
-          route={{params: {id: 123}}}
+          route={{params: {url: '123'}}}
           navigation={{setOptions: () => {}}}
         />,
       )

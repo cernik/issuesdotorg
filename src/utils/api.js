@@ -2,22 +2,19 @@
 import * as storageUtility from '../utils/storage';
 import type {ItemType} from '../types';
 
-import {URL} from './constants';
+function requestApi(url: string): Promise<any> {
+  return fetch(url).then((response) => response.json());
+}
 
-type fetchListParams = {
-  state: 'closed' | 'open' | 'all',
-  page: number,
-  limit: number,
-};
+export async function fetchList(
+  url: string,
+  state: string = 'closed',
+  page: number = 1,
+  limit: number = 10,
+): Promise<Array<ItemType>> {
+  const urlWithParams: string = `${url}?state=${state}&page=${page}&per_page=${limit}`;
 
-export async function fetchList({
-  state = 'closed',
-  page = 1,
-  limit = 10,
-}: fetchListParams): Promise<Array<ItemType | any>> {
-  const dataResult = await fetch(
-    `${URL}/issues?state=${state}&page=${page}&per_page=${limit}`,
-  ).then((response) => response.json());
+  const dataResult: Array<ItemType> = await requestApi(urlWithParams);
 
   if (!Array.isArray(dataResult)) {
     return [];
@@ -26,10 +23,8 @@ export async function fetchList({
   return dataResult;
 }
 
-export async function fetchOne(id: number): Promise<ItemType> {
-  const dataResult = await fetch(`${URL}/issues/${id}`).then((response) =>
-    response.json(),
-  );
+export async function fetchOne(url: string): Promise<ItemType> {
+  const dataResult: ItemType = await requestApi(url);
 
   if (typeof dataResult !== 'object') {
     return {};
@@ -38,10 +33,8 @@ export async function fetchOne(id: number): Promise<ItemType> {
   return dataResult;
 }
 
-export async function fetchComments(id: number): Promise<Array<ItemType>> {
-  const dataResult = await fetch(
-    `${URL}/issues/${id}/comments`,
-  ).then((response) => response.json());
+export async function fetchComments(url: string): Promise<Array<ItemType>> {
+  const dataResult: Array<ItemType> = await requestApi(url);
 
   if (!Array.isArray(dataResult)) {
     return [];
@@ -51,7 +44,7 @@ export async function fetchComments(id: number): Promise<Array<ItemType>> {
 }
 
 export async function fetchBookmarks(): Promise<Array<ItemType>> {
-  const dataResult = await storageUtility.getData('selected');
+  const dataResult: Array<ItemType> = await storageUtility.getData('selected');
   if (!Array.isArray(dataResult)) {
     return [];
   }

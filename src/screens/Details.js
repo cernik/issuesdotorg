@@ -14,16 +14,16 @@ import type {ItemType} from '../types';
 import {Styles} from '../utils/styles';
 import {fetchOne} from '../utils/api';
 
-function useFetch(id: number): [ItemType, boolean] {
+function useFetch(url: string): [ItemType, boolean] {
   const [isFetching, setIsFetching] = React.useState(false);
   const [data, setData] = React.useState({});
 
   React.useEffect(() => {
     const fetchData = async () => {
-      if (id) {
+      if (url) {
         setIsFetching(true);
 
-        const responseData = await fetchOne(id);
+        const responseData = await fetchOne(url);
         setData(responseData);
 
         setIsFetching(false);
@@ -31,7 +31,7 @@ function useFetch(id: number): [ItemType, boolean] {
     };
 
     fetchData();
-  }, [id]);
+  }, [url]);
 
   return [data, isFetching];
 }
@@ -42,20 +42,22 @@ type DetailsProps = {
   },
   route: {
     params: {
-      id: number,
+      url: string,
     },
   },
 };
 
 const Details = ({navigation, route}: DetailsProps) => {
-  const {id} = route.params;
-  const [item, isFetching] = useFetch(id);
+  const {url} = route.params;
+  const [item, isFetching] = useFetch(url);
 
   const [selected, setSelected] = React.useState(false);
 
   const handleHeaderRightPress = React.useCallback(() => {
-    storageUtility.getData('selected').then((ret) => {
-      let nextData = (ret || []).filter((s) => s.number !== item?.number);
+    storageUtility.getData('selected').then((ret: Array<ItemType>) => {
+      let nextData: Array<ItemType> = (ret || []).filter(
+        (s: ItemType) => s.id !== item?.id,
+      );
       if (!selected) {
         nextData = nextData.concat([item]);
       }
@@ -66,13 +68,13 @@ const Details = ({navigation, route}: DetailsProps) => {
   }, [selected, setSelected, item]);
 
   React.useEffect(() => {
-    storageUtility.getData('selected').then((ret) => {
-      const index = (ret || []).findIndex((s) => s.number === item?.number);
+    storageUtility.getData('selected').then((ret: Array<ItemType>) => {
+      const index: number = (ret || []).findIndex((s) => s.id === item?.id);
       if (index !== -1) {
         setSelected(true);
       }
     });
-  }, [item?.number]);
+  }, [item?.id]);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -95,7 +97,7 @@ const Details = ({navigation, route}: DetailsProps) => {
       <ScrollView contentContainerStyle={styles.contentContainerStyle}>
         <CardHeader item={item} />
         <Card item={item} />
-        <CommentsList id={item?.number} />
+        <CommentsList url={item.comments_url} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -107,7 +109,7 @@ Details.defaultProps = {
   },
   route: {
     params: {
-      item: {},
+      url: '',
     },
   },
 };

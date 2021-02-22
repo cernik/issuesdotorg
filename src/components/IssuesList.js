@@ -9,6 +9,7 @@ import {getSortedData} from '../utils/format';
 import {fetchList} from '../utils/api';
 
 function useFetchMore(
+  url: string,
   state: ItemStateType = 'closed',
   sortType?: string,
 ): [Array<ItemType>, boolean, Function, Function] {
@@ -37,7 +38,7 @@ function useFetchMore(
       return;
     }
     const fetch = async () => {
-      const newData = await fetchList({state, page, limit: 20});
+      const newData = await fetchList(url, state, page);
       setShouldFetch(false);
       setIsFetching(true);
       setTimeout(() => {
@@ -51,23 +52,28 @@ function useFetchMore(
     };
 
     fetch();
-  }, [state, page, isFetching, shouldFetch, shouldRefresh]);
+  }, [url, state, page, isFetching, shouldFetch, shouldRefresh]);
 
   return [data, isFetching, fetchMore, handleRefresh];
 }
 
 type IssuesListProps = {
+  url: string,
   status: ItemStateType,
   sortType: string,
   onItemPress: Function,
 };
 
 const IssuesList = ({
+  url = '',
   status = 'closed',
   sortType = '',
   onItemPress = noop,
 }: IssuesListProps) => {
-  const [data, isFetching, fetchMore, handleRefresh] = useFetchMore(status);
+  const [data, isFetching, fetchMore, handleRefresh] = useFetchMore(
+    url,
+    status,
+  );
 
   const renderItem = ({item}: {item: ItemType}) => {
     return <Row item={item} onPress={onItemPress} />;

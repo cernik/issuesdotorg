@@ -9,6 +9,23 @@ import Row from '../components/Row';
 import type {ItemType} from '../types';
 import {fetchBookmarks} from '../utils/api';
 
+function useBookmarksStorageWithFocusEffect() {
+  const [data, setData] = React.useState([]);
+
+  useFocusEffect(() => {
+    React.useCallback(() => {
+      const fetch = async () => {
+        const nextData = await fetchBookmarks();
+        setData(nextData);
+      };
+
+      fetch();
+    }, []);
+  });
+
+  return [data];
+}
+
 type BookmarksProps = {
   navigation: {
     navigate: (name: string, params: Object) => void,
@@ -16,27 +33,12 @@ type BookmarksProps = {
   },
 };
 
-function useBookmarksStorageWithFocusEffect() {
-  const [data, setData] = React.useState([]);
-
-  useFocusEffect(() => {
-    const fetch = async () => {
-      const nextData = await fetchBookmarks();
-      setData(nextData);
-    };
-
-    fetch();
-  });
-
-  return [data];
-}
-
 const Bookmarks = ({navigation}: BookmarksProps) => {
   const [data] = useBookmarksStorageWithFocusEffect();
 
   const handlePress = (item: ItemType): void => {
-    if (item.number) {
-      navigation.navigate(ROUTES.DETAILS, {id: item.number});
+    if (item.url) {
+      navigation.navigate(ROUTES.DETAILS, {url: item.url});
     }
   };
 

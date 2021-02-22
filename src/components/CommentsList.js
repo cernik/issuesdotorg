@@ -6,16 +6,16 @@ import type {ItemType} from '../types';
 
 import {fetchComments} from '../utils/api';
 
-function useFetchComments(id: number): [Array<ItemType>, boolean] {
+function useFetchComments(url: string): [Array<ItemType>, boolean] {
   const [isFetching, setIsFetching] = React.useState(false);
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
     const fetchData = async () => {
-      if (id) {
+      if (url) {
         setIsFetching(true);
 
-        const responseData = await fetchComments(id);
+        const responseData = await fetchComments(url);
 
         setData(responseData);
 
@@ -24,19 +24,19 @@ function useFetchComments(id: number): [Array<ItemType>, boolean] {
     };
 
     fetchData();
-  }, [id]);
+  }, [url]);
 
   return [data, isFetching];
 }
 
 type CommentsListProps = {
-  id: number,
+  url: string,
 };
 
-const CommentsList = ({id}: CommentsListProps) => {
-  const [comments, isFetchingComments] = useFetchComments(id);
+const CommentsList = ({url}: CommentsListProps) => {
+  const [comments, isFetchingComments] = useFetchComments(url);
 
-  if (isFetchingComments || !id) {
+  if (isFetchingComments || !url) {
     return <LoadingView />;
   }
 

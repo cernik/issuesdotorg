@@ -35,13 +35,6 @@ const HeaderRight = ({onPress = noop}) => (
   </TouchableOpacity>
 );
 
-type HomeProps = {
-  navigation: {
-    navigate: (name: string, params: Object) => void,
-    setOptions: (params: Object) => void,
-  },
-};
-
 function getOptions(selectedSortType: string): Array<string> {
   return [
     'Cancel',
@@ -52,7 +45,21 @@ function getOptions(selectedSortType: string): Array<string> {
   ];
 }
 
-const Home = ({navigation}: HomeProps) => {
+type HomeProps = {
+  navigation: {
+    navigate: (name: string, params: Object) => void,
+    setOptions: (params: Object) => void,
+  },
+  route: {
+    params: {
+      url: string,
+    },
+  },
+};
+
+const Home = ({navigation, route}: HomeProps) => {
+  const {url} = route?.params || {};
+
   const [sortType, setSortType] = React.useState(SORT_TYPE.UPDATED_AT);
   const [status, setStatus] = React.useState('all');
 
@@ -94,13 +101,16 @@ const Home = ({navigation}: HomeProps) => {
 
   const handlePress = (item: ItemType): void => {
     if (item.number) {
-      navigation.navigate(ROUTES.DETAILS, {id: item.number});
+      navigation.navigate(ROUTES.DETAILS, {
+        url: item.url,
+      });
     }
   };
 
   return (
     <SafeAreaView style={Styles.flex1}>
       <IssuesList
+        url={url}
         status={status}
         sortType={sortType}
         onItemPress={handlePress}
@@ -113,6 +123,11 @@ Home.defaultProps = {
   navigation: {
     navigate: noop,
     setOptions: noop,
+  },
+  route: {
+    params: {
+      url: '',
+    },
   },
 };
 
