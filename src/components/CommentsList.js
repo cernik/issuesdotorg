@@ -36,7 +36,7 @@ type CommentsListProps = {
 const CommentsList = ({id}: CommentsListProps) => {
   const [comments, isFetchingComments] = useFetchComments(id);
 
-  if (!isFetchingComments || !id) {
+  if (isFetchingComments || !id) {
     return <LoadingView />;
   }
 
