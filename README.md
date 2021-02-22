@@ -1,6 +1,11 @@
-## React Native Github Issues tracker
+# React Native Github Issues tracker
 
 Simple React Native App for tracking github issues
+
+## Versions
+
+- Branch `master` - redux state management with thunks;
+- Branch `basic` - component state management with hooks;
 
 ## Installation
 
@@ -24,6 +29,7 @@ yarn ios
 ```
 yarn test
 
+yarn test --updateSnapshot
 ```
 
 ## Check types
@@ -32,3 +38,14 @@ yarn test
 yarn flow
 
 ```
+
+## TODO
+
+- UI - Add interface for copy-paste of repo url;
+- Tests - Add tests for redux and thunks;
+- Tests - More components tests;
+- Branches - Create branch for typescript based code;
+- Branches - Create branch for useReducer state management sample;
+- UI - Add React context for themes and localization sample;
+- FlowJS - Cover promises;
+- Repo - Add sample licence;
